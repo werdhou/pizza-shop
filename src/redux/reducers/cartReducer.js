@@ -24,11 +24,10 @@ const cartReducer = (state = initialState, action) => {
             const items = Object.values(newItems).map(obj => obj.items)
             const allPizzas = [].concat.apply([], items)
             const totalPrice = getTotalPrice(allPizzas)
-            debugger
             return {
                 ...state,
                 items: newItems,
-                totalPizzasCount: [].concat.apply([], Object.values(newItems)).length,
+                totalPizzasCount: allPizzas.length,
                 totalPrice
             }
         }
@@ -48,10 +47,14 @@ const cartReducer = (state = initialState, action) => {
             const newItems = {
                 ...state.items
             }
+            const currentTotalPrice = newItems[action.payload].totalPrice
+            const currentTotalCount = newItems[action.payload].items.length
             delete newItems[action.payload]
             return {
                 ...state,
-                items: newItems
+                items: newItems,
+                totalPrice: state.totalPrice - currentTotalPrice,
+                totalPizzasCount: state.totalPizzasCount - currentTotalCount
             }
 
         default:
